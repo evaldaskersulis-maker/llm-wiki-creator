@@ -1,61 +1,65 @@
 ## What was created
 
-- **wiki/** — directory with `index.md` and subdirectories for concepts, entities, projects, logs, topics, comparisons, and synthesis
+- **wiki/** — directory with `index.md` and `logs/` for session history
 - **.claude/CLAUDE.md** — rules that tell Claude how to manage the wiki automatically
-- **wiki/concepts/wiki-conventions.md** — reference for page formats, templates, and procedures
+- **wiki/wiki-conventions.md** — reference for page formats, templates, and procedures
 - **raw/** — directory for source documents (Claude reads but never modifies these)
 
-## How sessions work
+## How it works
 
-- **Start:** Claude finds the nearest `wiki/` from your working directory and loads its index
-- **During:** Claude reads wiki pages for context when answering questions or doing work
-- **End:** Claude updates wiki pages with new knowledge, appends to the daily log, and runs lint if it's due
+This wiki is Claude's long-term memory. It stores knowledge across any domain — legal documents, financial plans, IT infrastructure, coding projects, health records, or anything else you work on.
 
-You don't need to ask Claude to update the wiki — it happens automatically at the end of every session.
+- **Start of session:** Claude finds the nearest `wiki/` and loads its index for context
+- **During session:** Claude reads wiki pages when they're relevant to your questions or work
+- **End of session:** If the session produced knowledge worth remembering, Claude updates the wiki. Trivial sessions (quick questions, small fixes) don't trigger updates
+
+The key test: "Would a future Claude session need this, and can't derive it from existing files?" If no — nothing gets written.
 
 ## Dokumentacijos struktūra
 
 Claude valdo tris failų tipus kiekviename projekte:
 
 - **CLAUDE.md** — Tik kritinės taisyklės. Dalykai, kuriuos Claude PRIVALO
-  žinoti: draudimai, gotchas, credentials vietos. Skaitomas automatiškai
-  kiekvieną sesiją. Trumpas (iki 25 eilučių).
+  žinoti: draudimai, gotchas, credentials vietos. Trumpas (iki 25 eilučių).
 - **README.md** — Žmonėms. Kas tai per projektas ir kaip paleisti.
   Trumpas (iki 30 eilučių).
-- **Wiki** (`wiki/projects/`) — Viskas kita. Pilna dokumentacija:
-  tech stack, architektūra, deployment, API, ryšiai su kitais projektais.
-  Atnaujinama automatiškai kiekvienos sesijos pabaigoje.
+- **Wiki** (`wiki/`) — Viskas kita. Pilna dokumentacija, organizuota pagal
+  domenus (pvz. `legal/`, `finance/`, `IT/`, `projects/`).
 - **.env** — Credentials reikšmės. Niekada ne CLAUDE.md, README ar wiki.
   `.env.example` (kintamųjų vardai be reikšmių) saugus git'e.
 
-Claude pats nusprendžia, ką kur rašyti. Tau nereikia apie tai galvoti.
+## Domain folders
 
-## How wikis branch
+Wiki content is organized by life/work domain:
 
-Each directory can have its own `wiki/` for **context isolation** — so unrelated projects don't pollute each other's context.
+```
+wiki/
+  index.md
+  logs/
+  legal/          — contracts, regulations
+  finance/        — budgets, taxes, investments
+  IT/             — servers, networking, infrastructure
+  projects/       — software projects
+  wiki-conventions.md
+```
 
-New `wiki/` directories are created automatically when:
-- A directory contains `raw/` with at least one file
-- Claude creates 2+ wiki pages related to a directory in a single session
-
-Wikis **inherit context** from parent wikis: Claude reads the active wiki plus all parent wikis up to the root. Child wiki content takes priority over parent.
+Folders are created as needed — don't worry about setting them up in advance. When you start working in a new domain, Claude creates the folder and files it there.
 
 ## How to browse
 
 1. Open your project root as an **Obsidian vault** (or any markdown editor)
 2. All wiki pages use standard markdown with `[[wikilinks]]`
 3. Obsidian's graph view shows the knowledge structure
-4. Filenames are unique across all wikis — so wikilinks resolve correctly vault-wide
+4. Domain folders give you a natural way to browse by topic
+5. Filenames are unique across all wikis — so wikilinks resolve correctly vault-wide
+
+## Child wikis
+
+The wiki starts flat — one `wiki/` at the root. If a domain grows large (20+ pages), Claude can extract it into its own child wiki with a separate index. This happens organically; you don't need to plan for it.
 
 ## What you don't need to do
 
-- **No manual wiki maintenance** — Claude handles all page creation, updates, and cross-references
-- **No commands to remember** — everything runs automatically per the session rules in CLAUDE.md
-- **No lint scheduling** — lint runs automatically every 7 days at session end, fixing dead links, orphan pages, and frontmatter gaps
-- **No file organization** — Claude decides where pages belong based on content relevance (active wiki, parent wiki, or root wiki)
-
-## Customization
-
-- **Lint intervals:** Edit `.claude/CLAUDE.md`, change "7 days" (domain) or "30 days" (global) in the Lint section
-- **Domain-specific rules:** Create `.claude/CLAUDE.md` in any subdirectory with additional H2 sections
-- **Obsidian vault root:** By default, open your project root as the vault. All `wiki/` directories will be visible
+- **No manual wiki maintenance** — Claude handles page creation, updates, and cross-references
+- **No commands to remember** — everything runs automatically per the rules in CLAUDE.md
+- **No scheduled lint** — Claude fixes issues (dead links, orphan pages) when it notices them while reading
+- **No noise** — only meaningful knowledge gets captured, not session ceremony

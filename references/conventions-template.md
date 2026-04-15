@@ -1,14 +1,14 @@
 ---
 title: "Wiki Conventions"
-type: concept
-tags: [infrastructure, wiki, conventions, reference]
+type: reference
+tags: [infrastructure, wiki, conventions]
 created: {TODAY}
 updated: {TODAY}
 sources: []
 aliases: ["Wiki Formats", "Wiki Reference"]
 ---
 
-Reference document for wiki page formats, templates, and procedures. Read by Claude before writing wiki content (triggered by CLAUDE.md rules E and G).
+Reference document for wiki page formats, templates, and procedures. Read by Claude when writing wiki content.
 
 ## Page Conventions
 
@@ -17,21 +17,32 @@ All wiki pages use YAML frontmatter:
 ```yaml
 ---
 title: "Page Title"
-type: project | entity | concept | topic | comparison | synthesis | source
-tags: [tag1, tag2]
+type: note | project | source | reference | log
+tags: [domain, topic]
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 sources: ["[[source-page]]"]
 aliases: ["Alternative Name"]
-project: "path/relative/to/root"   # only for project pages
 ---
 ```
 
 - Use `[[wikilinks]]` for internal references within the same wiki (Obsidian-compatible).
 - Filenames: kebab-case.
 - Every page must be listed in its wiki's `index.md`.
-- Every page must have at least one wikilink to another page in the same wiki (no orphans).
 - No H1 (`#`) in the body — Obsidian uses the filename/title as H1.
+
+## Domain Folders
+
+Wiki pages are organized by life/work domain rather than abstract categories. Examples:
+
+- `legal/` — contracts, regulations, procedures
+- `finance/` — budgets, tax, investments
+- `IT/` — infrastructure, servers, networking
+- `projects/` — software projects, each with its own page
+- `health/` — medical info, procedures
+
+Create domain folders organically as content arrives. Don't pre-create empty folders.
+Pages that span multiple domains go in the one that's most relevant, with wikilinks from the other.
 
 ## Index Format
 
@@ -46,20 +57,18 @@ last_lint: YYYY-MM-DD
 ---
 ```
 
-Sections by type, entries sorted alphabetically:
+Sections by domain, entries sorted alphabetically:
 
 ```markdown
+## Legal
+- [[some-contract]] — Description
+
+## IT
+- [[server-setup]] — Description
+
 ## Projects
 - [[my-project]] — Description
-
-## Entities
-- [[some-entity]] — Description
-
-## Concepts
-- [[some-concept]] — Description
 ```
-
-For the **root wiki**, add a `## Domains` section listing domain directories and their wiki paths.
 
 ## Log Format
 
@@ -100,7 +109,7 @@ When the user points to a source in `raw/`:
 1. Read the source document fully.
 2. Discuss key takeaways with the user.
 3. Create a source summary page in the active wiki.
-4. Update or create entity/concept/topic pages with new information.
+4. Update or create related pages with new information.
 5. Update the active wiki's `index.md`.
 6. Append to the active wiki's daily log.
 
@@ -111,14 +120,14 @@ When the user asks questions against accumulated knowledge:
 2. Read relevant pages and synthesize an answer.
 3. If the answer is substantial and reusable, offer to file it as a wiki page.
 
-### Naujo projekto kūrimas
+### Naujo projekto kurimas
 
 Kai kuriamas naujas projektas:
-1. Sukurti `CLAUDE.md` pagal šabloną:
+1. Sukurti `CLAUDE.md` pagal sabloną:
    ```
    # {Projekto pavadinimas}
 
-   ## Kritinės taisyklės
+   ## Kritines taisykles
    - [imperatyvios instrukcijos]
 
    ## Credentials
@@ -127,7 +136,7 @@ Kai kuriamas naujas projektas:
    ## Dokumentacija
    Pilna dokumentacija: žr. `wiki/projects/{projektas}.md`
    ```
-2. Sukurti `README.md` pagal šabloną:
+2. Sukurti `README.md` pagal sabloną:
    ```
    # {Projekto pavadinimas}
 
@@ -139,29 +148,22 @@ Kai kuriamas naujas projektas:
    ## Dokumentacija
    Pilna dokumentacija: žr. `wiki/projects/{projektas}.md`
    ```
-3. Sukurti `.env.example` su reikalingais kintamaisiais (be reikšmių).
-4. Sukurti wiki puslapį `wiki/projects/{projektas}.md` su pilna dokumentacija.
-5. Užregistruoti `wiki/index.md`.
+3. Sukurti `.env.example` su reikalingais kintamaisiais (be reiksiu).
+4. Sukurti wiki puslapi `wiki/projects/{projektas}.md` su pilna dokumentacija.
+5. Uzregistruoti `wiki/index.md`.
 
 ## Lint Checklist
 
+Claude lintina oportunistiškai — kai pastebi problemų skaitydamas wiki, ne pagal grafiką.
+
 ### Checks
 
-- **Orphan pages:** files in wiki not listed in `index.md` → auto-fix: add to index
-- **Dead wikilinks:** `[[links]]` pointing to nonexistent pages → auto-fix: remove or update if page was moved/renamed
-- **Stale pages:** `updated` date older than 90 days → report to user
-- **Frontmatter gaps:** missing required fields → auto-fix: add missing fields
-- **Unregistered projects:** directories without a wiki page → report to user
-- **Promotion candidates:** pages referenced from 2+ wiki branches → report to user, execute promotion
-- **Filename collisions:** two files with same name across wikis → auto-fix: add domain prefix
-- **Contradictions:** conflicting claims across pages → report to user (do not auto-resolve)
-
-### Optimization
-
-- Read full content only for files with `updated >= last_lint`.
-- Use `find`/`grep` for structural checks (orphans, collisions, stale pages) without reading full content.
-- Stale pages: `grep 'updated:' *.md` and compare dates.
-- Dead links from deletions: compare `index.md` entries against filesystem.
+- **Orphan pages:** files in wiki not listed in `index.md` -> auto-fix: add to index
+- **Dead wikilinks:** `[[links]]` pointing to nonexistent pages -> auto-fix: remove or update
+- **Frontmatter gaps:** missing required fields -> auto-fix: add missing fields
+- **Filename collisions:** two files with same name across wikis -> auto-fix: add domain prefix
+- **Stale pages:** `updated` date older than 90 days -> report to user
+- **Contradictions:** conflicting claims across pages -> report to user
 
 After lint, update `last_lint` in the active wiki's `index.md`.
 
