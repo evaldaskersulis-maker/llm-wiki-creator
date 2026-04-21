@@ -110,13 +110,15 @@ Append-only within a day. New day = new file. Create month directories as needed
 
 ### Manual Ingest
 
-When the user points to a source in `raw/`:
-1. Read the source document fully.
+`raw/` katalogas gali būti bet kuriame poaplankio lygyje (pvz. `Sysadmin/Klviatūra/raw/`, `Teise/Skolininkai/raw/`). Failai ten yra read-only šaltiniai — Claude tik skaito, niekada nekeičia.
+
+Kai naudotojas nurodo `raw/` katalogą arba Claude aptinka jį sesijos pradžioje:
+1. Read the source document(s) fully.
 2. Discuss key takeaways with the user.
-3. Create a source summary page in the wiki.
+3. Create a source summary page in the wiki under the matching domain folder.
 4. Update or create related pages with new information.
 5. Update `index.md`.
-6. Append to the daily log.
+6. Append to the daily log with verb `ingest`.
 
 ### Query
 

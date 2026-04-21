@@ -27,8 +27,9 @@ Set up a wiki-based memory system for an AI personal assistant. Covers any domai
 5. **Create wiki/ structure:** All paths relative to `{PROJECT_ROOT}`:
    ```
    mkdir -p {PROJECT_ROOT}/wiki/logs/
-   mkdir -p {PROJECT_ROOT}/raw/
    ```
+   Note: `raw/` directories are created organically in project subdirectories as needed (e.g., `Teise/Skolininkai/raw/`), not at the project root during initialization.
+
    Ask the user which domain folders to create. Suggest based on context (e.g., a coding project might want `projects/`, a personal root might want `legal/`, `finance/`, `IT/`). Create whatever the user picks. If unsure, start with no domain folders — they'll be created organically as content arrives.
 
    Create `{PROJECT_ROOT}/wiki/index.md` with this content:

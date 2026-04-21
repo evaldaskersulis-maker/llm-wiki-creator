@@ -40,6 +40,7 @@ Jei cwd yra po `{PROJECT_ROOT}`:
 1. Perskaityti `{PROJECT_ROOT}/wiki/index.md`.
 2. Skaityti `.claude/CLAUDE.md` failus aukštyn nuo cwd (gilesnis perrašo aukštesnį).
 3. Jei cwd atitinka registruotą projektą wiki `index.md` — perskaityti to projekto wiki puslapį pilnam kontekstui.
+4. Skanuoti `raw/` katalogus iki 2 lygių (cwd/raw/, cwd/*/raw/) — jei rasta failų, pasiūlyti naudotojui ingestuoti.
 
 ## C. Wiki struktūros augimas
 
@@ -93,6 +94,6 @@ Atnaujinti `last_lint` datą `index.md` po lint.
 
 ## Saugos taisyklės
 
-- Niekada nekeisti `raw/` failų. Niekada netrinti wiki puslapių be naudotojo patvirtinimo.
+- Niekada nekeisti `raw/` failų (bet kuriame katalogo lygyje). Niekada netrinti wiki puslapių be naudotojo patvirtinimo.
 - Logai yra append-only per dieną. Visada atnaujinti `updated` frontmatter redaguojant.
 - Prieš kuriant puslapį, patikrinti ar toks jau egzistuoja.
